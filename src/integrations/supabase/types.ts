@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          is_active: boolean | null
+          temple_id: string | null
+          title: string
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          is_active?: boolean | null
+          temple_id?: string | null
+          title: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean | null
+          temple_id?: string | null
+          title?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_temple_id_fkey"
+            columns: ["temple_id"]
+            isOneToOne: false
+            referencedRelation: "temples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           booking_date: string
@@ -143,6 +190,104 @@ export type Database = {
           id?: string
           phone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      temple_slots: {
+        Row: {
+          created_at: string
+          end_time: string
+          id: string
+          max_capacity: number | null
+          slot_name: string
+          start_time: string
+          status: string | null
+          temple_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_time: string
+          id?: string
+          max_capacity?: number | null
+          slot_name: string
+          start_time: string
+          status?: string | null
+          temple_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: string
+          id?: string
+          max_capacity?: number | null
+          slot_name?: string
+          start_time?: string
+          status?: string | null
+          temple_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "temple_slots_temple_id_fkey"
+            columns: ["temple_id"]
+            isOneToOne: false
+            referencedRelation: "temples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      temples: {
+        Row: {
+          created_at: string
+          description: string | null
+          district: string
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          latitude: number | null
+          location: string | null
+          longitude: number | null
+          map_url: string | null
+          name: string
+          slug: string
+          type: string
+          updated_at: string
+          virtual_darshan_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          district: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          map_url?: string | null
+          name: string
+          slug: string
+          type: string
+          updated_at?: string
+          virtual_darshan_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          district?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          map_url?: string | null
+          name?: string
+          slug?: string
+          type?: string
+          updated_at?: string
+          virtual_darshan_url?: string | null
         }
         Relationships: []
       }
