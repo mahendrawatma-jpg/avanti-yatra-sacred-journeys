@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/SearchBar";
 import TempleCard from "@/components/TempleCard";
@@ -14,6 +15,8 @@ import salkanpur from "@/assets/salkanpur.jpg";
 import khajrana from "@/assets/khajrana.jpg";
 
 const Index = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   const scrollToTemples = () => {
     document.getElementById("temples-section")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -26,6 +29,12 @@ const Index = () => {
     salkanpur,
     khajrana,
   };
+
+  const filteredTemples = temples.filter((temple) =>
+    temple.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    temple.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    temple.type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const advisories = [
     {
@@ -89,7 +98,7 @@ const Index = () => {
 
       {/* Search Section */}
       <section className="container mx-auto px-4 -mt-8 relative z-20">
-        <SearchBar />
+        <SearchBar onSearch={setSearchTerm} />
       </section>
 
       {/* Temples Section */}
@@ -102,19 +111,25 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {temples.map((temple) => (
-            <TempleCard
-              key={temple.id}
-              id={temple.id}
-              name={temple.name}
-              image={templeImages[temple.id]}
-              district={temple.district}
-              timings={temple.timings}
-              type={temple.type}
-              description={temple.description}
-              crowdLevel={temple.crowdLevel}
-            />
-          ))}
+          {filteredTemples.length > 0 ? (
+            filteredTemples.map((temple) => (
+              <TempleCard
+                key={temple.id}
+                id={temple.id}
+                name={temple.name}
+                image={templeImages[temple.id]}
+                district={temple.district}
+                timings={temple.timings}
+                type={temple.type}
+                description={temple.description}
+                crowdLevel={temple.crowdLevel}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-xl text-muted-foreground">No temples found matching your search</p>
+            </div>
+          )}
         </div>
       </section>
 

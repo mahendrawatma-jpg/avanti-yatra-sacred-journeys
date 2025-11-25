@@ -15,6 +15,8 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import BookDarshan from "./pages/BookDarshan";
 import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import CrowdPrediction from "./pages/CrowdPrediction";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/temple/:id" element={<TempleDetails />} />
           <Route path="/book-darshan/:id" element={<BookDarshan />} />
           <Route path="/user-dashboard" element={<UserDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/crowd-prediction" element={<CrowdPrediction />} />
           <Route path="/events" element={<Events />} />
           <Route path="/virtual-darshan" element={<VirtualDarshan />} />
           <Route path="/travel" element={<Travel />} />
