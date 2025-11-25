@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { temples } from "@/data/temples";
@@ -7,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { MapPin, Clock, Calendar, Users, Phone, Car, Train, Plane, Ticket, Video, ExternalLink } from "lucide-react";
+import { MapPin, Clock, Calendar, Users, Phone, Car, Train, Plane, Ticket, Video, ExternalLink, TrendingUp } from "lucide-react";
+import { predictDay, findBestTimeSlot, getTempleType } from "@/lib/predictionEngine";
 import mahakaleshwar from "@/assets/mahakaleshwar.jpg";
 import omkareshwar from "@/assets/omkareshwar.jpg";
 import kalbhairav from "@/assets/kalbhairav.jpg";
@@ -29,6 +31,17 @@ const TempleDetails = () => {
     khajrana,
   };
 
+  // Dynamic crowd predictions
+  const crowdPredictions = useMemo(() => {
+    if (!temple) return [];
+    const templeType = getTempleType(temple.id, temple.type);
+    return predictDay(temple.id, templeType, new Date(), "Clear", false);
+  }, [temple]);
+
+  const bestTimeSlot = useMemo(() => {
+    return findBestTimeSlot(crowdPredictions);
+  }, [crowdPredictions]);
+
   if (!temple) {
     return (
       <div className="min-h-screen">
@@ -42,12 +55,31 @@ const TempleDetails = () => {
     );
   }
 
-  const crowdData = [
-    { time: "Morning (6-10 AM)", level: "High", color: "text-sacred-red" },
-    { time: "Afternoon (10 AM-4 PM)", level: "Medium", color: "text-secondary" },
-    { time: "Evening (4-8 PM)", level: "High", color: "text-sacred-red" },
-    { time: "Night (8 PM onwards)", level: "Low", color: "text-sacred-green" },
-  ];
+  const getCrowdColor = (level: string) => {
+    switch (level) {
+      case "Low":
+        return "bg-green-500 text-white";
+      case "Medium":
+        return "bg-yellow-500 text-white";
+      case "High":
+        return "bg-red-500 text-white";
+      default:
+        return "bg-gray-500 text-white";
+    }
+  };
+
+  const getCrowdBorder = (level: string) => {
+    switch (level) {
+      case "Low":
+        return "border-green-500 shadow-lg shadow-green-500/30 bg-green-500/5";
+      case "Medium":
+        return "border-yellow-500";
+      case "High":
+        return "border-red-500";
+      default:
+        return "border-border";
+    }
+  };
 
   const getGoogleMapsUrl = () => {
     const query = encodeURIComponent(`${temple.name}, ${temple.district}, Madhya Pradesh`);
@@ -193,22 +225,36 @@ const TempleDetails = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {crowdData.map((data, index) => (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {crowdPredictions.map((data, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-4 rounded-lg bg-muted/30"
+                      className={`p-4 rounded-lg border-2 transition-all duration-300 hover:scale-[1.02] ${
+                        data.time_slot === bestTimeSlot
+                          ? getCrowdBorder("Low")
+                          : "border-border hover:border-muted-foreground/30 bg-muted/30"
+                      }`}
                     >
-                      <span className="font-medium">{data.time}</span>
-                      <Badge className={data.color}>{data.level} Crowd</Badge>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">{data.time_slot}</span>
+                        {data.time_slot === bestTimeSlot && (
+                          <Badge variant="outline" className="text-xs bg-green-500/10 text-green-600 border-green-500">
+                            Recommended
+                          </Badge>
+                        )}
+                      </div>
+                      <Badge className={getCrowdColor(data.crowd_level)}>
+                        {data.crowd_level} Crowd
+                      </Badge>
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 p-4 bg-primary/10 rounded-lg">
-                  <p className="text-sm">
-                    <strong>Best time to visit:</strong> Early morning (before 7 AM) or late evening
-                    (after 8 PM) for a more peaceful experience.
+                <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
+                  <p className="flex items-center gap-2 font-semibold">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    Best time to visit:
                   </p>
+                  <p className="text-lg mt-1">{bestTimeSlot}</p>
                 </div>
               </CardContent>
             </Card>

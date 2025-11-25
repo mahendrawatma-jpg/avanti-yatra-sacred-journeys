@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,10 +9,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { format, addDays } from "date-fns";
 import { Brain, CloudSun, Star } from "lucide-react";
+import { predictWeek, getTempleType } from "@/lib/predictionEngine";
+import { temples as localTemples } from "@/data/temples";
 
 interface Temple {
   id: string;
   name: string;
+  type?: string;
 }
 
 interface PredictionForm {
@@ -37,6 +40,7 @@ export default function AdminPredictions() {
   const [temples, setTemples] = useState<Temple[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [previewTemple, setPreviewTemple] = useState<string>("");
   const { toast } = useToast();
 
   const [form, setForm] = useState<PredictionForm>({
@@ -59,10 +63,26 @@ export default function AdminPredictions() {
   }, []);
 
   const fetchTemples = async () => {
-    const { data } = await supabase.from("temples").select("id, name").order("name");
-    if (data) setTemples(data);
+    const { data } = await supabase.from("temples").select("id, name, type").order("name");
+    if (data && data.length > 0) {
+      setTemples(data);
+      setPreviewTemple(data[0].id);
+    } else {
+      // Fall back to local temples
+      const local = localTemples.map(t => ({ id: t.id, name: t.name, type: t.type }));
+      setTemples(local);
+      if (local.length > 0) setPreviewTemple(local[0].id);
+    }
     setLoading(false);
   };
+
+  // Dynamic 7-day preview based on selected temple
+  const weekPredictions = useMemo(() => {
+    if (!previewTemple) return [];
+    const temple = temples.find(t => t.id === previewTemple);
+    const templeType = temple?.type || getTempleType(previewTemple);
+    return predictWeek(previewTemple, templeType, "Clear");
+  }, [previewTemple, temples]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,11 +125,8 @@ export default function AdminPredictions() {
     setSubmitting(false);
   };
 
-  // Generate next 7 days predictions display
-  const next7Days = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
-
   const getCrowdColor = (level: string) => {
-    switch (level) {
+    switch (level.toLowerCase()) {
       case "low":
         return "bg-green-100 text-green-700";
       case "medium":
@@ -359,27 +376,27 @@ export default function AdminPredictions() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-primary rounded-full"></span>
-                  Day of Week (Weekend/Weekday)
+                  Temple Type (Jyotirlinga: +60, Devi: +45, Ganesh: +40)
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-primary rounded-full"></span>
-                  Month & Season
+                  Time Slot (Morning: +10, Afternoon: +20, Evening: -10, Night: -5)
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-primary rounded-full"></span>
-                  Festival Indicator
+                  Weekend Boost (+20)
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-primary rounded-full"></span>
-                  Weather Conditions
+                  Festival Indicator (+40)
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-primary rounded-full"></span>
-                  Historical Crowd Data
+                  Weather (Clear: 0, Rainy: -20)
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-primary rounded-full"></span>
-                  Temple Base Crowd Level
+                  Random Factor (-5 to +5)
                 </li>
               </ul>
             </div>
@@ -389,15 +406,15 @@ export default function AdminPredictions() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700">Low</span>
-                  <span className="text-sm text-muted-foreground">Less than 500 visitors</span>
+                  <span className="text-sm text-muted-foreground">Score &lt; 40</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-700">Medium</span>
-                  <span className="text-sm text-muted-foreground">500 - 1500 visitors</span>
+                  <span className="text-sm text-muted-foreground">Score 40 - 75</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">High</span>
-                  <span className="text-sm text-muted-foreground">More than 1500 visitors</span>
+                  <span className="text-sm text-muted-foreground">Score &gt; 75</span>
                 </div>
               </div>
             </div>
@@ -415,23 +432,43 @@ export default function AdminPredictions() {
 
       {/* Next 7 Days Preview */}
       <Card className="border-border">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Next 7 Days Preview</CardTitle>
+          <Select value={previewTemple} onValueChange={setPreviewTemple}>
+            <SelectTrigger className="w-64">
+              <SelectValue placeholder="Select temple" />
+            </SelectTrigger>
+            <SelectContent>
+              {temples.map((temple) => (
+                <SelectItem key={temple.id} value={temple.id}>
+                  {temple.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-7 gap-2">
-            {next7Days.map((date, index) => (
+            {weekPredictions.map((day, index) => (
               <div
                 key={index}
-                className="p-3 rounded-lg border border-border text-center"
+                className="p-3 rounded-lg border border-border text-center transition-all duration-200 hover:shadow-md hover:border-primary/30"
               >
-                <p className="text-sm font-medium">{format(date, "EEE")}</p>
-                <p className="text-xs text-muted-foreground">{format(date, "MMM d")}</p>
+                <p className="text-sm font-medium">{day.dayName}</p>
+                <p className="text-xs text-muted-foreground">{format(day.date, "MMM d")}</p>
                 <div className="mt-2 space-y-1">
-                  <div className={`px-2 py-0.5 rounded text-xs ${getCrowdColor("medium")}`}>M</div>
-                  <div className={`px-2 py-0.5 rounded text-xs ${getCrowdColor("medium")}`}>A</div>
-                  <div className={`px-2 py-0.5 rounded text-xs ${getCrowdColor("low")}`}>E</div>
-                  <div className={`px-2 py-0.5 rounded text-xs ${getCrowdColor("low")}`}>N</div>
+                  {day.predictions.map((pred, pIndex) => {
+                    const slotLabel = pred.time_slot.split(" ")[0].charAt(0); // M, A, E, N
+                    return (
+                      <div
+                        key={pIndex}
+                        className={`px-2 py-0.5 rounded text-xs transition-all duration-200 hover:scale-105 ${getCrowdColor(pred.crowd_level)}`}
+                        title={`${pred.time_slot}: ${pred.crowd_level}`}
+                      >
+                        {slotLabel}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))}
