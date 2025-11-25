@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   ChevronLeft,
+  Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -134,7 +135,17 @@ export default function AdminLayout() {
           })}
         </nav>
 
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border space-y-2">
+          <Link
+            to="/"
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-muted text-muted-foreground hover:text-foreground w-full",
+              !sidebarOpen && "justify-center"
+            )}
+          >
+            <Home className="h-5 w-5" />
+            {sidebarOpen && <span>Back to Site</span>}
+          </Link>
           <Button
             variant="ghost"
             className={cn("w-full justify-start gap-3", !sidebarOpen && "justify-center")}
@@ -182,7 +193,14 @@ export default function AdminLayout() {
                 );
               })}
             </nav>
-            <div className="p-4 border-t border-border">
+            <div className="p-4 border-t border-border space-y-2">
+              <Link
+                to="/"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-muted text-muted-foreground hover:text-foreground w-full"
+              >
+                <Home className="h-5 w-5" />
+                <span>Back to Site</span>
+              </Link>
               <Button variant="ghost" className="w-full justify-start gap-3" onClick={handleLogout}>
                 <LogOut className="h-5 w-5" />
                 <span>Logout</span>
