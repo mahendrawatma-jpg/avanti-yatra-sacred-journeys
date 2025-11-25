@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
@@ -40,11 +40,10 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Helpline Button */}
+          {/* Auth Button */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Phone className="h-4 w-4" />
-              1800-MP-YATRA
+            <Button asChild variant="default" size="sm">
+              <Link to="/auth">Sign In / Sign Up</Link>
             </Button>
           </div>
 
@@ -71,9 +70,8 @@ const Navbar = () => {
               </Link>
             ))}
             <div className="px-4 pt-2">
-              <Button variant="outline" size="sm" className="w-full gap-2">
-                <Phone className="h-4 w-4" />
-                1800-MP-YATRA
+              <Button asChild variant="default" size="sm" className="w-full">
+                <Link to="/auth">Sign In / Sign Up</Link>
               </Button>
             </div>
           </div>
