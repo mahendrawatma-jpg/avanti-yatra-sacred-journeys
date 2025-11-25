@@ -13,6 +13,8 @@ import VirtualDarshan from "./pages/VirtualDarshan";
 import Travel from "./pages/Travel";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
+import BookDarshan from "./pages/BookDarshan";
+import UserDashboard from "./pages/UserDashboard";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/temples" element={<Temples />} />
           <Route path="/temple/:id" element={<TempleDetails />} />
+          <Route path="/book-darshan/:id" element={<BookDarshan />} />
+          <Route path="/user-dashboard" element={<UserDashboard />} />
           <Route path="/events" element={<Events />} />
           <Route path="/virtual-darshan" element={<VirtualDarshan />} />
           <Route path="/travel" element={<Travel />} />
