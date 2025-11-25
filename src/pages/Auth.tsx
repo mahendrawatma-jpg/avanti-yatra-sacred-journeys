@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -99,6 +100,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-background via-secondary/5 to-background">
       <Navbar />
+      <BackButton />
       
       <main className="flex-1 container mx-auto px-4 py-12 flex items-center justify-center">
         <div className="w-full max-w-md">

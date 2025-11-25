@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 import { temples } from "@/data/temples";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -94,6 +95,7 @@ const TempleDetails = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <BackButton />
 
       {/* Hero Banner */}
       <section

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, AlertCircle } from "lucide-react";
@@ -154,6 +155,7 @@ const Events = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <BackButton />
 
       <section className="bg-gradient-peaceful py-16">
         <div className="container mx-auto px-4">

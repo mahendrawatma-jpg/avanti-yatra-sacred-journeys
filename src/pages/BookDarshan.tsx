@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { temples } from "@/data/temples";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -136,6 +137,7 @@ const BookDarshan = () => {
     return (
       <div className="min-h-screen">
         <Navbar />
+        <BackButton />
         <div className="container mx-auto px-4 py-12">
           <Card className="max-w-2xl mx-auto">
             <CardHeader>
@@ -195,6 +197,7 @@ const BookDarshan = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <BackButton />
       
       <div className="container mx-auto px-4 py-12">
         <Card className="max-w-2xl mx-auto">

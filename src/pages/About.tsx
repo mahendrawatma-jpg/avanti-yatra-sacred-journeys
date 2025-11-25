@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Eye, Lightbulb } from "lucide-react";
 
@@ -7,6 +8,7 @@ const About = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <BackButton />
 
       <section className="bg-gradient-peaceful py-16">
         <div className="container mx-auto px-4">
