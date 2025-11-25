@@ -60,6 +60,25 @@ const BookDarshan = () => {
       return;
     }
 
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to book darshan",
+        variant: "destructive",
+      });
+      navigate("/auth");
+      return;
+    }
+
+    if (!temple) {
+      toast({
+        title: "Temple Not Found",
+        description: "Please select a valid temple",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -69,7 +88,7 @@ const BookDarshan = () => {
       // Generate QR code data
       const qrData = JSON.stringify({
         bookingId: newBookingId,
-        temple: temple?.name,
+        temple: temple.name,
         date: bookingDate,
         timeSlot: timeSlot,
         userId: user.id,
@@ -84,8 +103,8 @@ const BookDarshan = () => {
       // Save booking to database
       const { error } = await supabase.from("bookings").insert({
         user_id: user.id,
-        temple_id: temple?.id,
-        temple_name: temple?.name,
+        temple_id: temple.id,
+        temple_name: temple.name,
         booking_date: bookingDate,
         time_slot: timeSlot,
         qr_code: qrCodeDataUrl,
