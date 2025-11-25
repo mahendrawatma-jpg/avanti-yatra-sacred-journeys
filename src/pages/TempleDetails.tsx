@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Clock, Calendar, Users, Phone, Car, Train, Plane, Ticket } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { MapPin, Clock, Calendar, Users, Phone, Car, Train, Plane, Ticket, Video, ExternalLink } from "lucide-react";
 import mahakaleshwar from "@/assets/mahakaleshwar.jpg";
 import omkareshwar from "@/assets/omkareshwar.jpg";
 import kalbhairav from "@/assets/kalbhairav.jpg";
@@ -48,6 +49,16 @@ const TempleDetails = () => {
     { time: "Night (8 PM onwards)", level: "Low", color: "text-sacred-green" },
   ];
 
+  const getGoogleMapsUrl = () => {
+    const query = encodeURIComponent(`${temple.name}, ${temple.district}, Madhya Pradesh`);
+    return `https://www.google.com/maps/search/?api=1&query=${query}`;
+  };
+
+  const getEmbedMapUrl = () => {
+    const query = encodeURIComponent(`${temple.name}, ${temple.district}, Madhya Pradesh`);
+    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${query}`;
+  };
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -78,7 +89,7 @@ const TempleDetails = () => {
 
       {/* Content */}
       <section className="container mx-auto px-4 py-12">
-        <div className="mb-8 flex justify-center">
+        <div className="mb-8 flex flex-wrap justify-center gap-4">
           <Button 
             size="lg" 
             className="gap-2 shadow-lg animate-pulse-slow"
@@ -87,6 +98,35 @@ const TempleDetails = () => {
             <Ticket className="h-5 w-5" />
             Book Darshan
           </Button>
+          
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="lg" variant="outline" className="gap-2">
+                <Video className="h-5 w-5" />
+                Watch Live Darshan
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl">
+              <DialogHeader>
+                <DialogTitle>Virtual Darshan - {temple.name}</DialogTitle>
+              </DialogHeader>
+              <div className="aspect-video">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/live_stream?channel=UCkEwJ6Ml-kVBxF_Jsr0J_wA"
+                  title="Live Darshan"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="rounded-lg"
+                ></iframe>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Note: Live stream availability depends on temple schedule
+              </p>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Tabs defaultValue="overview" className="space-y-8">
@@ -200,6 +240,32 @@ const TempleDetails = () => {
           </TabsContent>
 
           <TabsContent value="travel" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Temple Location</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <iframe
+                    width="100%"
+                    height="400"
+                    frameBorder="0"
+                    style={{ border: 0 }}
+                    src={getEmbedMapUrl()}
+                    allowFullScreen
+                    className="rounded-lg"
+                  ></iframe>
+                  <Button 
+                    onClick={() => window.open(getGoogleMapsUrl(), '_blank')}
+                    className="w-full gap-2"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    Open in Google Maps
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {temple.howToReach && (
               <>
                 {temple.howToReach.road && (
