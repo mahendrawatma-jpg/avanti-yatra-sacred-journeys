@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { temples } from "@/data/temples";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Clock, Calendar, Users, Phone, Car, Train, Plane } from "lucide-react";
+import { MapPin, Clock, Calendar, Users, Phone, Car, Train, Plane, Ticket } from "lucide-react";
 import mahakaleshwar from "@/assets/mahakaleshwar.jpg";
 import omkareshwar from "@/assets/omkareshwar.jpg";
 import kalbhairav from "@/assets/kalbhairav.jpg";
@@ -16,6 +16,7 @@ import khajrana from "@/assets/khajrana.jpg";
 
 const TempleDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const temple = temples.find((t) => t.id === id);
 
   const templeImages: { [key: string]: string } = {
@@ -77,6 +78,17 @@ const TempleDetails = () => {
 
       {/* Content */}
       <section className="container mx-auto px-4 py-12">
+        <div className="mb-8 flex justify-center">
+          <Button 
+            size="lg" 
+            className="gap-2 shadow-lg animate-pulse-slow"
+            onClick={() => navigate(`/book-darshan/${temple.id}`)}
+          >
+            <Ticket className="h-5 w-5" />
+            Book Darshan
+          </Button>
+        </div>
+
         <Tabs defaultValue="overview" className="space-y-8">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:w-auto">
             <TabsTrigger value="overview">Overview</TabsTrigger>
