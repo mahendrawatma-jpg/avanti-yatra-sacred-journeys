@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Youtube, Mail, Phone } from "lucide-react";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const Footer = () => {
+  const { user, dashboardPath, dashboardLabel } = useUserRole();
+
   return (
     <footer className="bg-gradient-to-b from-background to-muted border-t border-border mt-20">
       <div className="container mx-auto px-4 py-12">
@@ -38,11 +41,13 @@ const Footer = () => {
                   Events
                 </Link>
               </li>
-              <li>
-                <Link to="/virtual-darshan" className="text-muted-foreground hover:text-primary transition-colors">
-                  Virtual Darshan
-                </Link>
-              </li>
+              {user && (
+                <li>
+                  <Link to={dashboardPath} className="text-muted-foreground hover:text-primary transition-colors">
+                    {dashboardLabel}
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 

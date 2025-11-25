@@ -4,15 +4,18 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, AlertCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Events = () => {
   const [festivals, setFestivals] = useState<any[]>([]);
+  const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchFestivals();
+    fetchAlerts();
   }, []);
 
   const fetchFestivals = async () => {
@@ -21,37 +24,78 @@ const Events = () => {
       .select("*")
       .order("start_date", { ascending: true });
 
-    if (data) {
+    if (data && data.length > 0) {
       setFestivals(data);
     }
     setLoading(false);
   };
 
+  const fetchAlerts = async () => {
+    const { data } = await supabase
+      .from("alerts")
+      .select("*")
+      .eq("is_active", true)
+      .order("created_at", { ascending: false });
+
+    if (data) {
+      setAlerts(data);
+    }
+  };
+
   const defaultEvents = [
     {
-      name: "Mahashivratri",
+      name: "Kartik Purnima Ujjain Mahotsav",
+      start_date: "2025-11-15",
+      temple_id: "mahakaleshwar",
+      category: "Cultural + Spiritual",
+      description: "Grand processions, lighting ceremonies, and Ganga aarti-style rituals at Ujjain. A beautiful celebration with thousands of oil lamps.",
+    },
+    {
+      name: "Omkareshwar Narmada Aarti Festival",
+      start_date: "2025-01-01",
+      temple_id: "omkareshwar",
+      category: "Daily Event",
+      description: "Daily evening Aarti on Narmada River ghats at 7 PM. Witness the mesmerizing spectacle of lamps floating on the sacred river.",
+    },
+    {
+      name: "Salkanpur Navratri Maha Mela",
+      start_date: "2025-03-30",
+      end_date: "2025-04-07",
+      temple_id: "salkanpur",
+      category: "Festival",
+      description: "9 days of devotion with lakhs of devotees, bhajans, and extended darshan queues. Special arrangements for pilgrims.",
+    },
+    {
+      name: "Maihar Sharda Devi Sharad Purnima Darshan",
+      start_date: "2025-10-13",
+      temple_id: "maihar",
+      category: "Special Darshan",
+      description: "Special night darshan with ropeway timings extended till midnight. Moonlit prayers at the hilltop temple.",
+    },
+    {
+      name: "Indore Khajrana Ganesh Pran Pratishtha Day",
+      start_date: "2025-09-15",
+      temple_id: "khajrana",
+      category: "Festival",
+      description: "Annual festival celebrating the consecration of Lord Ganesha with special poojas and prasad distribution.",
+    },
+    {
+      name: "Mahashivratri at Mahakaleshwar",
       start_date: "2025-02-26",
       temple_id: "mahakaleshwar",
       category: "Festival",
-      description: "Grand celebration of Lord Shiva with special night-long prayers and rituals at Mahakaleshwar Temple, Ujjain.",
+      description: "Grand celebration of Lord Shiva with special night-long prayers, Bhasma Aarti, and rituals at Mahakaleshwar Temple.",
     },
     {
-      name: "Somvati Amavasya",
-      start_date: "2025-03-29",
-      temple_id: "omkareshwar",
-      category: "Special Darshan",
-      description: "Sacred new moon day falling on Monday, considered highly auspicious for Shiva worship.",
-    },
-    {
-      name: "Chaitra Navratri",
+      name: "Chaitra Navratri at Maihar",
       start_date: "2025-03-30",
       end_date: "2025-04-07",
       temple_id: "maihar",
       category: "Festival",
-      description: "Nine days of devotion to Goddess Durga with special darshan arrangements at Maihar Temple.",
+      description: "Nine days of devotion to Goddess Sharda with special darshan arrangements and ropeway services.",
     },
     {
-      name: "Shravan Month",
+      name: "Shravan Month Celebrations",
       start_date: "2025-07-17",
       end_date: "2025-08-15",
       temple_id: "mahakaleshwar",
@@ -59,33 +103,19 @@ const Events = () => {
       description: "Holy month dedicated to Lord Shiva with special Rudrabhishek ceremonies every Monday.",
     },
     {
-      name: "Ganesh Chaturthi",
+      name: "Ganesh Chaturthi at Khajrana",
       start_date: "2025-08-27",
       temple_id: "khajrana",
       category: "Festival",
-      description: "Celebration of Lord Ganesha's birth with elaborate decorations and special pujas.",
+      description: "10-day celebration of Lord Ganesha's birth with elaborate decorations, cultural programs, and special pujas.",
     },
     {
-      name: "Sharad Navratri",
+      name: "Sharad Navratri at Salkanpur",
       start_date: "2025-09-22",
       end_date: "2025-09-30",
       temple_id: "salkanpur",
       category: "Festival",
-      description: "Nine nights of worship to Goddess Durga with grand celebrations and cultural programs.",
-    },
-    {
-      name: "Diwali Poojan",
-      start_date: "2025-10-20",
-      temple_id: "",
-      category: "Festival",
-      description: "Festival of lights celebrated with special evening aartis at all temples.",
-    },
-    {
-      name: "Kartik Purnima",
-      start_date: "2025-11-05",
-      temple_id: "omkareshwar",
-      category: "Special Darshan",
-      description: "Sacred full moon day with special prayers and boat rituals on Narmada River.",
+      description: "Nine nights of worship to Goddess Vindhyavasini with grand celebrations and cultural programs.",
     },
   ];
 
@@ -99,6 +129,10 @@ const Events = () => {
       maihar: "Maihar Temple, Satna",
       salkanpur: "Salkanpur Temple, Sehore",
       khajrana: "Khajrana Ganesh Temple, Indore",
+      "chintaman-ganesh": "Chintaman Ganesh Temple, Ujjain",
+      bhojpur: "Bhojpur Shiv Mandir, Bhopal",
+      jatashankar: "Jatashankar Mahadev, Pachmarhi",
+      "kaal-bhairav-dhar": "Kaal Bhairav Temple, Dhar",
     };
     return temples[templeId] || "All Temples";
   };
@@ -107,10 +141,14 @@ const Events = () => {
     const colors: { [key: string]: string } = {
       Festival: "bg-primary text-primary-foreground",
       "Special Darshan": "bg-secondary text-secondary-foreground",
-      Rally: "bg-accent text-accent-foreground",
-      Procession: "bg-muted text-muted-foreground",
+      "Cultural + Spiritual": "bg-accent text-accent-foreground",
+      "Daily Event": "bg-muted text-muted-foreground",
     };
     return colors[category] || "bg-primary text-primary-foreground";
+  };
+
+  const getAlertIcon = (alertType: string) => {
+    return AlertCircle;
   };
 
   return (
@@ -127,6 +165,22 @@ const Events = () => {
           </p>
         </div>
       </section>
+
+      {/* Announcements Section */}
+      {alerts.length > 0 && (
+        <section className="container mx-auto px-4 py-6">
+          <h2 className="text-xl font-semibold mb-4">Latest Announcements</h2>
+          <div className="space-y-3">
+            {alerts.slice(0, 3).map((alert, index) => (
+              <Alert key={index} variant={alert.alert_type === "Crowd High" ? "destructive" : "default"}>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>{alert.title}</AlertTitle>
+                <AlertDescription>{alert.description}</AlertDescription>
+              </Alert>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="container mx-auto px-4 py-16">
         {loading ? (
@@ -211,7 +265,7 @@ const Events = () => {
             </div>
 
             <div className="max-w-3xl mx-auto mt-12">
-              <h2 className="text-2xl font-bold mb-6 text-center">All Festivals</h2>
+              <h2 className="text-2xl font-bold mb-6 text-center">All Festivals & Events</h2>
               <div className="grid gap-4">
                 {displayEvents.map((event, index) => (
                   <Card key={index}>
