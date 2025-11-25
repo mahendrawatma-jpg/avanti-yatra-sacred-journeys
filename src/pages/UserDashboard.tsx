@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -133,6 +134,7 @@ const UserDashboard = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <BackButton />
 
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">

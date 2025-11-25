@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 import SearchBar from "@/components/SearchBar";
 import TempleCard from "@/components/TempleCard";
 import { temples } from "@/data/temples";
@@ -50,6 +51,7 @@ const Temples = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <BackButton />
 
       {/* Header */}
       <section className="bg-gradient-peaceful py-16">

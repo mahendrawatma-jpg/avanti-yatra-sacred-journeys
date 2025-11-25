@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackButton from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -86,6 +87,7 @@ const CrowdPrediction = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <BackButton />
 
       <section className="bg-gradient-peaceful py-16">
         <div className="container mx-auto px-4">
