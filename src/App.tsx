@@ -15,8 +15,20 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import BookDarshan from "./pages/BookDarshan";
 import UserDashboard from "./pages/UserDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
 import CrowdPrediction from "./pages/CrowdPrediction";
+
+// Admin imports
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminTemples from "./pages/admin/AdminTemples";
+import AdminEvents from "./pages/admin/AdminEvents";
+import AdminSlots from "./pages/admin/AdminSlots";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminPredictions from "./pages/admin/AdminPredictions";
+import AdminAlerts from "./pages/admin/AdminAlerts";
+import AdminBookings from "./pages/admin/AdminBookings";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +44,6 @@ const App = () => (
           <Route path="/temple/:id" element={<TempleDetails />} />
           <Route path="/book-darshan/:id" element={<BookDarshan />} />
           <Route path="/user-dashboard" element={<UserDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/crowd-prediction" element={<CrowdPrediction />} />
           <Route path="/events" element={<Events />} />
           <Route path="/virtual-darshan" element={<VirtualDarshan />} />
@@ -40,7 +51,21 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/auth" element={<Auth />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverview />} />
+            <Route path="temples" element={<AdminTemples />} />
+            <Route path="events" element={<AdminEvents />} />
+            <Route path="slots" element={<AdminSlots />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="predictions" element={<AdminPredictions />} />
+            <Route path="alerts" element={<AdminAlerts />} />
+            <Route path="bookings" element={<AdminBookings />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
