@@ -223,12 +223,12 @@ export default function AdminEvents() {
                 </div>
                 <div className="space-y-2">
                   <Label>Temple (Optional)</Label>
-                  <Select value={form.temple_id} onValueChange={(v) => setForm({ ...form, temple_id: v })}>
+                  <Select value={form.temple_id || "all"} onValueChange={(v) => setForm({ ...form, temple_id: v === "all" ? "" : v })}>
                     <SelectTrigger>
                       <SelectValue placeholder="All Temples" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Temples</SelectItem>
+                      <SelectItem value="all">All Temples</SelectItem>
                       {temples.map((temple) => (
                         <SelectItem key={temple.id} value={temple.id}>
                           {temple.name}
