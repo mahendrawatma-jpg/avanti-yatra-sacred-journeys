@@ -1,26 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    // Check current user
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const { user, dashboardPath, dashboardLabel } = useUserRole();
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -59,9 +45,9 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <Button asChild variant="default" size="sm" className="gap-2">
-                <Link to="/user-dashboard">
+                <Link to={dashboardPath}>
                   <User className="h-4 w-4" />
-                  Dashboard
+                  {dashboardLabel}
                 </Link>
               </Button>
             ) : (
@@ -96,9 +82,9 @@ const Navbar = () => {
             <div className="px-4 pt-2">
               {user ? (
                 <Button asChild variant="default" size="sm" className="w-full gap-2">
-                  <Link to="/user-dashboard">
+                  <Link to={dashboardPath}>
                     <User className="h-4 w-4" />
-                    Dashboard
+                    {dashboardLabel}
                   </Link>
                 </Button>
               ) : (
