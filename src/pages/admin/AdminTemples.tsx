@@ -70,31 +70,46 @@ export default function AdminTemples() {
 
     const slug = form.slug || form.name.toLowerCase().replace(/\s+/g, "-");
 
-    if (editingTemple) {
-      const { error } = await supabase
-        .from("temples")
-        .update({ ...form, slug })
-        .eq("id", editingTemple.id);
+    try {
+      if (editingTemple) {
+        const { data, error } = await supabase
+          .from("temples")
+          .update({ ...form, slug })
+          .eq("id", editingTemple.id)
+          .select();
 
-      if (error) {
-        toast({ title: "Error updating temple", description: error.message, variant: "destructive" });
-      } else {
+        console.log("Update result:", { data, error });
+
+        if (error) {
+          console.error("Update error:", error);
+          toast({ title: "Error updating temple", description: error.message, variant: "destructive" });
+          return;
+        }
+        
         toast({ title: "Temple updated successfully" });
-        fetchTemples();
+        await fetchTemples();
         resetForm();
-      }
-    } else {
-      const { error } = await supabase
-        .from("temples")
-        .insert([{ ...form, slug }]);
-
-      if (error) {
-        toast({ title: "Error adding temple", description: error.message, variant: "destructive" });
       } else {
+        const { data, error } = await supabase
+          .from("temples")
+          .insert([{ ...form, slug }])
+          .select();
+
+        console.log("Insert result:", { data, error });
+
+        if (error) {
+          console.error("Insert error:", error);
+          toast({ title: "Error adding temple", description: error.message, variant: "destructive" });
+          return;
+        }
+        
         toast({ title: "Temple added successfully" });
-        fetchTemples();
+        await fetchTemples();
         resetForm();
       }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 
@@ -117,13 +132,26 @@ export default function AdminTemples() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this temple?")) return;
 
-    const { error } = await supabase.from("temples").delete().eq("id", id);
+    try {
+      const { data, error } = await supabase
+        .from("temples")
+        .delete()
+        .eq("id", id)
+        .select();
 
-    if (error) {
-      toast({ title: "Error deleting temple", variant: "destructive" });
-    } else {
+      console.log("Delete result:", { data, error });
+
+      if (error) {
+        console.error("Delete error:", error);
+        toast({ title: "Error deleting temple", description: error.message, variant: "destructive" });
+        return;
+      }
+      
       toast({ title: "Temple deleted successfully" });
-      fetchTemples();
+      await fetchTemples();
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 
