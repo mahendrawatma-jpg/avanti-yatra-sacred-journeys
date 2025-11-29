@@ -2,6 +2,7 @@ import { Clock, MapPin, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface TempleCardProps {
   id: string;
@@ -31,27 +32,46 @@ const TempleCard = ({
   };
 
   return (
-    <div className="temple-card group">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+      whileHover={{ y: -12, scale: 1.02 }}
+      className="temple-card group"
+    >
       {/* Image Section */}
       <div className="relative h-56 overflow-hidden">
-        <img
+        <motion.img
           src={image}
           alt={name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.5 }}
         />
         {/* Type Badge */}
-        <div className="absolute top-3 left-3">
+        <motion.div
+          className="absolute top-3 left-3"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <Badge className="badge-temple bg-primary/90 text-primary-foreground backdrop-blur-sm">
             {type}
           </Badge>
-        </div>
+        </motion.div>
         {/* Crowd Badge */}
-        <div className="absolute top-3 right-3">
+        <motion.div
+          className="absolute top-3 right-3"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
+        >
           <Badge className={`badge-temple backdrop-blur-sm ${crowdColors[crowdLevel]}`}>
             <Users className="h-3 w-3 mr-1" />
             {crowdLevel}
           </Badge>
-        </div>
+        </motion.div>
       </div>
 
       {/* Content Section */}
@@ -74,10 +94,12 @@ const TempleCard = ({
         <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
 
         <Link to={`/temple/${id}`}>
-          <Button className="w-full btn-devotional">View Details</Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button className="w-full btn-devotional">View Details</Button>
+          </motion.div>
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

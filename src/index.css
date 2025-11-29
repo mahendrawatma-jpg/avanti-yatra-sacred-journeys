@@ -8,56 +8,57 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Spiritual Color Palette */
-    --background: 0 0% 100%;
-    --foreground: 25 30% 20%;
+    /* Modern Minimalist Palette with Spiritual Accents */
+    --background: 0 0% 98%;
+    --foreground: 240 10% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 25 30% 20%;
+    --card-foreground: 240 10% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 25 30% 20%;
+    --popover-foreground: 240 10% 15%;
 
-    /* Saffron Primary - Divine Orange */
-    --primary: 25 100% 50%;
+    /* Soft Amber Primary - Refined Spiritual Accent */
+    --primary: 35 85% 55%;
     --primary-foreground: 0 0% 100%;
 
-    /* Gold Secondary */
-    --secondary: 45 100% 65%;
-    --secondary-foreground: 25 30% 20%;
+    /* Warm Stone Secondary */
+    --secondary: 30 8% 92%;
+    --secondary-foreground: 240 10% 15%;
 
-    /* Soft Saffron Muted */
-    --muted: 25 100% 97%;
-    --muted-foreground: 25 20% 45%;
+    /* Neutral Muted */
+    --muted: 0 0% 96%;
+    --muted-foreground: 240 5% 50%;
 
-    /* Gold Accent */
-    --accent: 45 95% 70%;
-    --accent-foreground: 25 30% 20%;
+    /* Subtle Gold Accent */
+    --accent: 45 70% 88%;
+    --accent-foreground: 240 10% 15%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 25 30% 90%;
-    --input: 25 30% 90%;
-    --ring: 25 100% 50%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 35 85% 55%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Custom Devotional Colors */
-    --divine-glow: 45 100% 75%;
-    --temple-stone: 30 15% 85%;
-    --sacred-green: 120 40% 50%;
-    --sacred-red: 0 70% 50%;
+    /* Refined Spiritual Colors */
+    --divine-glow: 45 80% 65%;
+    --temple-stone: 30 8% 88%;
+    --sacred-green: 140 35% 55%;
+    --sacred-red: 0 65% 55%;
     
-    /* Gradients */
-    --gradient-devotional: linear-gradient(135deg, hsl(25 100% 50%) 0%, hsl(45 100% 65%) 100%);
-    --gradient-peaceful: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(25 100% 97%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(25 100% 50% / 0.9) 0%, hsl(45 100% 65% / 0.8) 100%);
+    /* Subtle Modern Gradients */
+    --gradient-devotional: linear-gradient(135deg, hsl(35 85% 55%) 0%, hsl(45 70% 60%) 100%);
+    --gradient-peaceful: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(35 85% 55% / 0.95) 0%, hsl(45 70% 60% / 0.9) 100%);
     
-    /* Shadows */
-    --shadow-devotional: 0 10px 40px hsl(25 100% 50% / 0.15);
-    --shadow-card: 0 4px 20px hsl(25 30% 20% / 0.08);
-    --shadow-glow: 0 0 30px hsl(45 100% 75% / 0.4);
+    /* Clean Modern Shadows */
+    --shadow-devotional: 0 20px 60px hsl(35 85% 55% / 0.12);
+    --shadow-card: 0 2px 12px hsl(240 10% 15% / 0.06);
+    --shadow-glow: 0 0 40px hsl(45 80% 65% / 0.3);
+    --shadow-float: 0 8px 30px hsl(240 10% 15% / 0.12);
   }
 }
 
@@ -78,18 +79,18 @@ All colors MUST be HSL.
 
 @layer components {
   .devotional-pattern {
-    background-image: radial-gradient(circle at 20% 50%, hsl(25 100% 50% / 0.03) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 80%, hsl(45 100% 65% / 0.05) 0%, transparent 50%);
+    background-image: radial-gradient(circle at 20% 50%, hsl(35 85% 55% / 0.02) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 80%, hsl(45 70% 60% / 0.03) 0%, transparent 50%);
   }
   
   .temple-card {
-    @apply bg-card rounded-xl overflow-hidden transition-all duration-300;
+    @apply bg-card rounded-lg overflow-hidden transition-all duration-500;
     box-shadow: var(--shadow-card);
   }
   
   .temple-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-devotional);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: var(--shadow-float);
   }
   
   .badge-temple {
@@ -97,13 +98,18 @@ All colors MUST be HSL.
   }
   
   .btn-devotional {
-    @apply bg-gradient-to-r from-primary to-secondary text-primary-foreground;
-    box-shadow: var(--shadow-glow);
+    @apply bg-gradient-to-r from-primary to-primary text-primary-foreground;
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .btn-devotional:hover {
     box-shadow: var(--shadow-devotional);
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.05);
+  }
+  
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-md border border-border/50;
   }
 }
 
@@ -127,10 +133,38 @@ All colors MUST be HSL.
   
   @keyframes glow {
     0%, 100% {
-      box-shadow: 0 0 20px hsl(45 100% 75% / 0.3);
+      box-shadow: 0 0 20px hsl(45 80% 65% / 0.2);
     }
     50% {
-      box-shadow: 0 0 40px hsl(45 100% 75% / 0.6);
+      box-shadow: 0 0 40px hsl(45 80% 65% / 0.4);
     }
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
   }
 }
