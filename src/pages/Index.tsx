@@ -4,8 +4,10 @@ import SearchBar from "@/components/SearchBar";
 import TempleCard from "@/components/TempleCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { temples } from "@/data/temples";
 import { ArrowDown, Info, Calendar, Shield, Clock } from "lucide-react";
+import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-temple.jpg";
 import mahakaleshwar from "@/assets/mahakaleshwar.jpg";
 import omkareshwar from "@/assets/omkareshwar.jpg";
@@ -77,22 +79,45 @@ const Index = () => {
         </div>
 
         <div className="container relative z-10 text-center text-white px-4">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
+          >
             Connecting Faith, Technology,
             <br />
             and the Heart of India
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/90 animate-fade-in">
-            A Smart Temple & Pilgrimage Portal for Madhya Pradesh
-          </p>
-          <Button
-            size="lg"
-            onClick={scrollToTemples}
-            className="btn-devotional text-lg px-8 py-6 animate-float"
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            className="text-xl md:text-2xl mb-8 text-white/90"
           >
-            Explore Temples
-            <ArrowDown className="ml-2 h-5 w-5" />
-          </Button>
+            A Smart Temple & Pilgrimage Portal for Madhya Pradesh
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <motion.div
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+            >
+              <Button
+                size="lg"
+                onClick={scrollToTemples}
+                className="btn-devotional text-lg px-8 py-6"
+              >
+                Explore Temples
+                <ArrowDown className="ml-2 h-5 w-5" />
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -103,16 +128,18 @@ const Index = () => {
 
       {/* Temples Section */}
       <section id="temples-section" className="container mx-auto px-4 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Sacred Temples of Madhya Pradesh</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover the divine heritage and spiritual essence of ancient temples across the heart of India
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Sacred Temples of Madhya Pradesh</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Discover the divine heritage and spiritual essence of ancient temples across the heart of India
+            </p>
+          </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredTemples.length > 0 ? (
-            filteredTemples.map((temple) => (
+            filteredTemples.map((temple, index) => (
               <TempleCard
                 key={temple.id}
                 id={temple.id}
@@ -126,9 +153,13 @@ const Index = () => {
               />
             ))
           ) : (
-            <div className="col-span-full text-center py-12">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="col-span-full text-center py-12"
+            >
               <p className="text-xl text-muted-foreground">No temples found matching your search</p>
-            </div>
+            </motion.div>
           )}
         </div>
       </section>
@@ -136,25 +167,35 @@ const Index = () => {
       {/* Advisory Section */}
       <section className="bg-muted/30 py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Temple Advisory & Visitor Guidelines</h2>
-            <p className="text-muted-foreground">Important information for a peaceful pilgrimage</p>
-          </div>
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Temple Advisory & Visitor Guidelines</h2>
+              <p className="text-muted-foreground">Important information for a peaceful pilgrimage</p>
+            </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {advisories.map((advisory, index) => {
               const Icon = advisory.icon;
               return (
-                <div
-                  key={index}
-                  className="bg-card p-6 rounded-xl shadow-card-custom hover:shadow-devotional transition-all duration-300 hover:-translate-y-1"
-                >
-                  <div className="w-12 h-12 rounded-full bg-gradient-devotional flex items-center justify-center mb-4">
-                    <Icon className="h-6 w-6 text-primary-foreground" />
-                  </div>
-                  <h3 className="font-semibold mb-2 text-lg">{advisory.title}</h3>
-                  <p className="text-sm text-muted-foreground">{advisory.description}</p>
-                </div>
+                <ScrollReveal key={index} delay={index * 0.1}>
+                  <motion.div
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="bg-card p-6 rounded-lg shadow-card-custom hover:shadow-devotional transition-all duration-300"
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 200 }}
+                      className="w-12 h-12 rounded-full bg-gradient-devotional flex items-center justify-center mb-4"
+                    >
+                      <Icon className="h-6 w-6 text-primary-foreground" />
+                    </motion.div>
+                    <h3 className="font-semibold mb-2 text-lg">{advisory.title}</h3>
+                    <p className="text-sm text-muted-foreground">{advisory.description}</p>
+                  </motion.div>
+                </ScrollReveal>
               );
             })}
           </div>
