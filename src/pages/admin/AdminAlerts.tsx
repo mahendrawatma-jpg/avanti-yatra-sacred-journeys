@@ -71,51 +71,86 @@ export default function AdminAlerts() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { data: userData } = await supabase.auth.getUser();
+    try {
+      const { data: userData } = await supabase.auth.getUser();
 
-    const payload = {
-      title: form.title,
-      description: form.description,
-      alert_type: form.alert_type,
-      temple_id: form.temple_id || null,
-      valid_until: form.valid_until || null,
-      created_by: userData.user?.id,
-    };
+      const payload = {
+        title: form.title,
+        description: form.description,
+        alert_type: form.alert_type,
+        temple_id: form.temple_id || null,
+        valid_until: form.valid_until || null,
+        created_by: userData.user?.id,
+      };
 
-    const { error } = await supabase.from("alerts").insert([payload]);
+      const { data, error } = await supabase
+        .from("alerts")
+        .insert([payload])
+        .select();
 
-    if (error) {
-      toast({ title: "Error creating alert", description: error.message, variant: "destructive" });
-    } else {
+      console.log("Insert alert result:", { data, error });
+
+      if (error) {
+        console.error("Insert alert error:", error);
+        toast({ title: "Error creating alert", description: error.message, variant: "destructive" });
+        return;
+      }
+      
       toast({ title: "Alert sent successfully" });
-      fetchData();
+      await fetchData();
       resetForm();
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 
   const handleToggleActive = async (id: string, isActive: boolean) => {
-    const { error } = await supabase
-      .from("alerts")
-      .update({ is_active: !isActive })
-      .eq("id", id);
+    try {
+      const { data, error } = await supabase
+        .from("alerts")
+        .update({ is_active: !isActive })
+        .eq("id", id)
+        .select();
 
-    if (error) {
-      toast({ title: "Error updating alert", variant: "destructive" });
-    } else {
-      fetchData();
+      console.log("Toggle alert result:", { data, error });
+
+      if (error) {
+        console.error("Toggle alert error:", error);
+        toast({ title: "Error updating alert", description: error.message, variant: "destructive" });
+        return;
+      }
+      
+      await fetchData();
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this alert?")) return;
 
-    const { error } = await supabase.from("alerts").delete().eq("id", id);
+    try {
+      const { data, error } = await supabase
+        .from("alerts")
+        .delete()
+        .eq("id", id)
+        .select();
 
-    if (error) {
-      toast({ title: "Error deleting alert", variant: "destructive" });
-    } else {
+      console.log("Delete alert result:", { data, error });
+
+      if (error) {
+        console.error("Delete alert error:", error);
+        toast({ title: "Error deleting alert", description: error.message, variant: "destructive" });
+        return;
+      }
+      
       toast({ title: "Alert deleted" });
-      fetchData();
+      await fetchData();
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 

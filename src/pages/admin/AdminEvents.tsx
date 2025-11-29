@@ -74,29 +74,46 @@ export default function AdminEvents() {
       temple_id: form.temple_id || null,
     };
 
-    if (editingEvent) {
-      const { error } = await supabase
-        .from("festivals")
-        .update(payload)
-        .eq("id", editingEvent.id);
+    try {
+      if (editingEvent) {
+        const { data, error } = await supabase
+          .from("festivals")
+          .update(payload)
+          .eq("id", editingEvent.id)
+          .select();
 
-      if (error) {
-        toast({ title: "Error updating event", description: error.message, variant: "destructive" });
-      } else {
+        console.log("Update event result:", { data, error });
+
+        if (error) {
+          console.error("Update event error:", error);
+          toast({ title: "Error updating event", description: error.message, variant: "destructive" });
+          return;
+        }
+        
         toast({ title: "Event updated successfully" });
-        fetchData();
+        await fetchData();
         resetForm();
-      }
-    } else {
-      const { error } = await supabase.from("festivals").insert([payload]);
-
-      if (error) {
-        toast({ title: "Error adding event", description: error.message, variant: "destructive" });
       } else {
+        const { data, error } = await supabase
+          .from("festivals")
+          .insert([payload])
+          .select();
+
+        console.log("Insert event result:", { data, error });
+
+        if (error) {
+          console.error("Insert event error:", error);
+          toast({ title: "Error adding event", description: error.message, variant: "destructive" });
+          return;
+        }
+        
         toast({ title: "Event added successfully" });
-        fetchData();
+        await fetchData();
         resetForm();
       }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 
@@ -116,13 +133,26 @@ export default function AdminEvents() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this event?")) return;
 
-    const { error } = await supabase.from("festivals").delete().eq("id", id);
+    try {
+      const { data, error } = await supabase
+        .from("festivals")
+        .delete()
+        .eq("id", id)
+        .select();
 
-    if (error) {
-      toast({ title: "Error deleting event", variant: "destructive" });
-    } else {
+      console.log("Delete event result:", { data, error });
+
+      if (error) {
+        console.error("Delete event error:", error);
+        toast({ title: "Error deleting event", description: error.message, variant: "destructive" });
+        return;
+      }
+      
       toast({ title: "Event deleted successfully" });
-      fetchData();
+      await fetchData();
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 

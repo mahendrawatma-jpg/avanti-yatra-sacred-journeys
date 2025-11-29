@@ -70,29 +70,46 @@ export default function AdminSlots() {
       status: form.status,
     };
 
-    if (editingSlot) {
-      const { error } = await supabase
-        .from("temple_slots")
-        .update(payload)
-        .eq("id", editingSlot.id);
+    try {
+      if (editingSlot) {
+        const { data, error } = await supabase
+          .from("temple_slots")
+          .update(payload)
+          .eq("id", editingSlot.id)
+          .select();
 
-      if (error) {
-        toast({ title: "Error updating slot", description: error.message, variant: "destructive" });
-      } else {
+        console.log("Update slot result:", { data, error });
+
+        if (error) {
+          console.error("Update slot error:", error);
+          toast({ title: "Error updating slot", description: error.message, variant: "destructive" });
+          return;
+        }
+        
         toast({ title: "Slot updated successfully" });
-        fetchData();
+        await fetchData();
         resetForm();
-      }
-    } else {
-      const { error } = await supabase.from("temple_slots").insert([payload]);
-
-      if (error) {
-        toast({ title: "Error adding slot", description: error.message, variant: "destructive" });
       } else {
+        const { data, error } = await supabase
+          .from("temple_slots")
+          .insert([payload])
+          .select();
+
+        console.log("Insert slot result:", { data, error });
+
+        if (error) {
+          console.error("Insert slot error:", error);
+          toast({ title: "Error adding slot", description: error.message, variant: "destructive" });
+          return;
+        }
+        
         toast({ title: "Slot added successfully" });
-        fetchData();
+        await fetchData();
         resetForm();
       }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 
@@ -112,13 +129,26 @@ export default function AdminSlots() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this slot?")) return;
 
-    const { error } = await supabase.from("temple_slots").delete().eq("id", id);
+    try {
+      const { data, error } = await supabase
+        .from("temple_slots")
+        .delete()
+        .eq("id", id)
+        .select();
 
-    if (error) {
-      toast({ title: "Error deleting slot", variant: "destructive" });
-    } else {
+      console.log("Delete slot result:", { data, error });
+
+      if (error) {
+        console.error("Delete slot error:", error);
+        toast({ title: "Error deleting slot", description: error.message, variant: "destructive" });
+        return;
+      }
+      
       toast({ title: "Slot deleted successfully" });
-      fetchData();
+      await fetchData();
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast({ title: "Unexpected error occurred", variant: "destructive" });
     }
   };
 
