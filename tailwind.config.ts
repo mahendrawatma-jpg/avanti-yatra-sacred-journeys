@@ -51,16 +51,21 @@ export default {
         'temple-stone': "hsl(var(--temple-stone))",
         'sacred-green': "hsl(var(--sacred-green))",
         'sacred-red': "hsl(var(--sacred-red))",
+        'mystic-blue': "hsl(var(--mystic-blue))",
+        'golden-hour': "hsl(var(--golden-hour))",
       },
       backgroundImage: {
         'gradient-devotional': 'var(--gradient-devotional)',
         'gradient-peaceful': 'var(--gradient-peaceful)',
         'gradient-hero': 'var(--gradient-hero)',
+        'gradient-accent': 'var(--gradient-accent)',
+        'gradient-vibrant': 'var(--gradient-vibrant)',
       },
       boxShadow: {
         'devotional': 'var(--shadow-devotional)',
         'card-custom': 'var(--shadow-card)',
         'glow': 'var(--shadow-glow)',
+        'accent': 'var(--shadow-accent)',
       },
       borderRadius: {
         lg: "var(--radius)",
