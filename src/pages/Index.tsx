@@ -5,6 +5,7 @@ import TempleCard from "@/components/TempleCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { ColorShift } from "@/components/ui/color-shift";
 import { temples } from "@/data/temples";
 import { ArrowDown, Info, Calendar, Shield, Clock } from "lucide-react";
 import { motion } from "framer-motion";
@@ -102,21 +103,22 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
           >
-            <motion.div
-              whileHover={{ scale: 1.05, y: -5 }}
-              whileTap={{ scale: 0.95 }}
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-            >
-              <Button
-                size="lg"
-                onClick={scrollToTemples}
-                className="btn-devotional text-lg px-8 py-6"
+            <ColorShift hoverScale={1.08}>
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
               >
-                Explore Temples
-                <ArrowDown className="ml-2 h-5 w-5" />
-              </Button>
-            </motion.div>
+                <Button
+                  size="lg"
+                  onClick={scrollToTemples}
+                  className="btn-devotional text-lg px-8 py-6 shadow-glow"
+                  withRipple
+                >
+                  Explore Temples
+                  <ArrowDown className="ml-2 h-5 w-5" />
+                </Button>
+              </motion.div>
+            </ColorShift>
           </motion.div>
         </div>
       </section>
@@ -179,22 +181,24 @@ const Index = () => {
               const Icon = advisory.icon;
               return (
                 <ScrollReveal key={index} delay={index * 0.1}>
-                  <motion.div
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    className="bg-card p-6 rounded-lg shadow-card-custom hover:shadow-devotional transition-all duration-300"
-                  >
+                  <ColorShift hoverScale={1.05}>
                     <motion.div
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 200 }}
-                      className="w-12 h-12 rounded-full bg-gradient-devotional flex items-center justify-center mb-4"
+                      className="bg-card p-6 rounded-lg shadow-card-custom hover:shadow-devotional transition-all duration-300 border-2 border-transparent hover:border-primary"
                     >
-                      <Icon className="h-6 w-6 text-primary-foreground" />
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 200 }}
+                        whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                        className="w-12 h-12 rounded-full bg-gradient-devotional flex items-center justify-center mb-4"
+                      >
+                        <Icon className="h-6 w-6 text-primary-foreground" />
+                      </motion.div>
+                      <h3 className="font-semibold mb-2 text-lg">{advisory.title}</h3>
+                      <p className="text-sm text-muted-foreground">{advisory.description}</p>
                     </motion.div>
-                    <h3 className="font-semibold mb-2 text-lg">{advisory.title}</h3>
-                    <p className="text-sm text-muted-foreground">{advisory.description}</p>
-                  </motion.div>
+                  </ColorShift>
                 </ScrollReveal>
               );
             })}

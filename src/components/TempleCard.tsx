@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ColorShift } from "@/components/ui/color-shift";
+import { ParticleBurst } from "@/components/ui/particle-burst";
+import { useState } from "react";
 
 interface TempleCardProps {
   id: string;
@@ -25,6 +28,8 @@ const TempleCard = ({
   description,
   crowdLevel,
 }: TempleCardProps) => {
+  const [showParticles, setShowParticles] = useState(false);
+  
   const crowdColors = {
     Low: "bg-sacred-green/20 text-sacred-green border-sacred-green/30",
     Medium: "bg-secondary/20 text-secondary-foreground border-secondary/30",
@@ -32,14 +37,17 @@ const TempleCard = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-      whileHover={{ y: -12, scale: 1.02 }}
-      className="temple-card group"
-    >
+    <ColorShift>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+        className="temple-card group relative"
+        onHoverStart={() => setShowParticles(true)}
+        onHoverEnd={() => setShowParticles(false)}
+      >
+        <ParticleBurst trigger={showParticles} count={8} />
       {/* Image Section */}
       <div className="relative h-56 overflow-hidden">
         <motion.img
@@ -94,12 +102,13 @@ const TempleCard = ({
         <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
 
         <Link to={`/temple/${id}`}>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button className="w-full btn-devotional">View Details</Button>
-          </motion.div>
+          <Button className="w-full btn-devotional" withRipple>
+            View Details
+          </Button>
         </Link>
       </div>
-    </motion.div>
+      </motion.div>
+    </ColorShift>
   );
 };
 
