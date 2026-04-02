@@ -12,6 +12,8 @@ describe("cn", () => {
 
   it("supports conditional and falsey values via clsx", () => {
     const isActive = true;
-    expect(cn("base", isActive && "active", false && "hidden", undefined, null, "end")).toBe("base active end");
+    expect(
+      cn("base", isActive ? "active" : undefined, !isActive ? "hidden" : undefined, undefined, null, "end")
+    ).toBe("base active end");
   });
 });
